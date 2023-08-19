@@ -9,16 +9,22 @@ Create Virtual environment and activate the Virtual environment.
 		conda activate yolov7_custom
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
-Scripts -
-	app.py - Python flask application that needs to run on a web server to handle the website communication with the YOLO model.
-	index.html - Html file to manage the website webpage and handle UI.
-	The other scripts for each exercises is named with their following exercise names.
+Scripts :
+
+app.py - Python flask application that needs to run on a web server to handle the website communication with the YOLO model.
+
+index.html - Html file to manage the website webpage and handle UI.
+
+The other scripts for each exercises is named with their following exercise names.
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
-ffmpeg -
-	This is used to convert the processed video to mp4 format.
-	Install the executable file from the official webiste and add it to the system's environment variables.
-	To check if it is installed succesfully: 
+ffmpeg :
+
+This is used to convert the processed video to mp4 format.
+
+ Install the executable file from the official webiste and add it to the system's environment variables.
+
+ To check if it is installed succesfully: 
  
  	ffmpeg -version
 
@@ -28,6 +34,7 @@ ffmpeg -
 How to run:
 
 We are using publicly available yolov7 model from github repo: https://github.com/WongKinYiu/yolov7.git
+
 1. Install the necessary dependencies
    
 		pip install -r requirements.txt
