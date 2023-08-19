@@ -30,15 +30,19 @@ How to run:
 We are using publicly available yolov7 model from github repo: https://github.com/WongKinYiu/yolov7.git
 1. Install the necessary dependencies
    
-			pip install -r requirements.txt
+		pip install -r requirements.txt
+
    	FFMPEG needs to be installed. 
 	
 3. Click on [`yolov7-w6-pose.pt`](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt) to get the pre trained model weights pytorch file and place it the yolov7 directory.
 
-4. Run python app.py to run the website on local server.	
+4. Run the python app.py to run the website on local server.
+   
+   		python app.py
 
 
 Note: If you wish to run this on GPU, then:
+
 You need to install CUDA that is compatible with the GPU available on your machine. Refer official cuda installation and add them to the enviromnment variables for GPU acceleration.
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
