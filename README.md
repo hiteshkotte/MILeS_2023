@@ -34,7 +34,7 @@ This is used to convert the processed video to mp4 format.
 
  To check if it is installed succesfully: 
  
- 	ffmpeg -version
+ 		ffmpeg -version
 
 
 
