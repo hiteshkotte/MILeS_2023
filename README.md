@@ -1,3 +1,11 @@
+Real-Time Posture Correction in Gym Exercises: A Computer Vision-Based Approach for Performance Analysis, Error Classification and Feedback.
+
+Hitesh Kotte, Milos Kravcik and Nghia Duong-Trung
+
+
+https://github.com/hiteshkotte/MILeS_2023/assets/35593884/7835485c-a494-40b1-826d-0bdde969e541
+
+
 Create Virtual environment and activate the Virtual environment.
 
 1. Create a virtual environment (Install this preferrably on Anaconda Prompt.
