@@ -15,8 +15,9 @@ Scripts -
 ffmpeg -
 	This is used to convert the processed video to mp4 format.
 	Install the executable file from the official webiste and add it to the system'S environment variables.
-	
-	To check if it is installed succesfuly run: ffmpeg -version
+	To check if it is installed succesfuly run: 
+ 
+ 	ffmpeg -version
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
 How to run:
