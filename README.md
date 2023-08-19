@@ -50,7 +50,7 @@ We are using publicly available yolov7 model from github repo: https://github.co
 
 Note: If you wish to run this on GPU, then:
 
-You need to install CUDA that is compatible with the GPU available on your machine. Refer official cuda installation and add them to the enviromnment variables for GPU acceleration.
+You need to install CUDA that is compatible with the GPU available on your machine. Refer official CUDA installation and add them to the enviromnment variables for GPU acceleration.
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
