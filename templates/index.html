@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Real-Time Posture Correction in Gym Exercises</title>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        
+        #video-container {
+            margin: 20px auto;
+            width: 640px;
+            height: 360px;
+        }
+        
+        .video-player {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        #file-input {
+            display: none;
+        }
+        
+        #video-label {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        #video-name {
+            font-size: 16px;
+            display: inline-block;
+        }
+        
+        #button-container {
+            margin: 10px;
+        }
+        
+        #button-container button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #processing-message {
+            display: none;
+        }
+
+        #processed-video-container {
+            display: none;
+            margin: 20px auto;
+            width: 640px;
+            height: 360px;
+        }
+
+        .toggle-button-on {
+        background-color: green;
+        color: white;
+        }
+
+        .toggle-button-off {
+        background-color: red;
+        color: white;
+        }
+
+
+        /* ADDED CODE */
+        #exercise-type {
+            margin: 10px auto;
+            width: 200px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body onload="myLoadFunction()">
+    <h1>Real-Time Posture Correction in Gym Exercises</h1>
+    
+    <div id="video-container">
+        <!-- <video id="video-player" width="720" height="405" class="video-player" controls></video> -->
+    </div>
+
+    <br/>
+    <br/>
+    
+    <div>
+        <label for="file-input" id="video-label">
+            Choose a video file:</label>
+        <input type="file" id="file-input" name="video">
+        <p id="video-name"></p>
+    </div>
+
+    <div id="exercise-type">
+        <label for="exercise-dropdown">Choose an exercise type:</label>
+        <select name="exercise" id="exercise-dropdown">
+            <option value="">Select...</option>
+            <option value="bicep">Bicep Curl</option>
+            <option value="lunges">Lunges</option>
+            <option value="pushup">Pushups</option>
+            <option value="shoulder_lateral_raise">Shoulder Lateral Raise</option>
+            <option value="squats">Squats</option>
+            <!-- Add more options as needed -->
+        </select>
+    </div>
+    
+    <div id="button-container">
+        <button id="process-button" onclick="processVideo()">Process Video</button>
+    </div>
+
+    <div id="processing-message">
+        <h2>Video processing in progress...</h2>
+        <p>Please wait while the video is being processed.</p>
+    </div>
+
+
+    <div id="processed-video-container">
+        <video id="processed-video-player" class="video-player" controls>
+            <source src="" type="video/mp4">
+        </video>
+    </div>
+    <div>
+    <button id="toggleButton" class="toggle-button-off" onclick="toggleButton()">Keypoints Off</button>
+    </div>
+
+    <div>
+    <button id="RecommendButton" class="toggle-button-off" onclick="toggleRecommendButton()">Recommendation off</button>
+    </div>
+    <!-- <video id="webcam" width="640" height="480" autoplay></video> -->
+    <div>
+    <button id="webcamToggle" onclick="toggleWebcam()">Start Webcam</button>    
+    </div>
+
+    
+    <div>
+        <button id="helpButton" onclick="toggleHelp()">Help</button>
+    </div>
+    <div id="helpInfo" style="display:none;">
+        <h3>Help Information</h3>
+        <h3>Buttons Functionality</h3>
+        <strong>Webcam:</strong> When you click on start webcam button you can access the real time feedback for the selected exercise.<br>
+        <strong>Recommendation Button:</strong> When you toggle this on, you can see the feedback in form of text on the screen.<br>
+        <strong>Keypoints Button:</strong> When you toggle this on, you can see the Kepoints drawn on the body.<br>
+        <strong>Process Video:</strong> Onclick processes the video with both recorded and webcam as input.<br>
+
+        <h3>Exercises</h3>
+        <strong>Lunges:</strong> Please note that this is a right leg forward lunges exercise. Please place your right leg forward.
+
+
+    </div>
+
+    <script>
+    
+    const fileInput = document.getElementById('file-input');
+    const videoName = document.getElementById('video-name');
+    const processButton = document.getElementById('process-button');
+    const processingMessage = document.getElementById('processing-message');
+    const processedVideoContainer = document.getElementById('processed-video-container');
+    const processedVideoPlayer = document.getElementById('processed-video-player');
+    const videoContainer = document.getElementById('video-container')
+
+    const videoElement1 = document.createElement('video');
+    videoElement1.width = 720;
+    videoElement1.height = 405;
+    videoElement1.autoplay = false; // Starts the video playback as soon as it can do so
+    videoElement1.controls = true; // Shows the default video controls (play, pause, volume, etc.)
+    videoElement1.id = 'video-player';
+    // const videoElement1 = '<video id="video-player" class="video-player" controls></video>';
+
+    const videoElement2 = document.createElement('video');
+    videoElement2.width = 720;
+    videoElement2.height = 405;
+    videoElement2.autoplay = true; // Starts the video playback as soon as it can do so
+    videoElement2.controls = false; // Shows the default video controls (play, pause, volume, etc.)
+    videoElement2.id = 'webcam';
+    // const videoElement2 = '<video id="webcam" width="640" height="480" autoplay></video>'; 
+
+    const exerciseDropdown = document.getElementById('exercise-dropdown');
+    let selectedExercise; // Variable to store the selected exercise type
+
+    let initialVideoSource; // Variable to store the initial video source URL
+    let processedVideoSource; // Variable to store the processed video source URL
+    let webcamStream = null;
+    let drawSkeleton = "no";
+    let recommendButton = "no";
+  
+    fileInput.addEventListener('change', function() {
+        const file = fileInput.files[0];
+        let videoPlayer = document.getElementById('video-player');
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                initialVideoSource = e.target.result; // Store the initial video source URL
+                videoPlayer.src = initialVideoSource;
+            };
+            reader.readAsDataURL(file);
+            videoName.textContent = `${file.name}`;
+            processedVideoContainer.style.display = 'none';  // Hide the processed video player
+        }
+    });
+
+
+    // Add this code within your <script> tag
+    function toggleHelp() {
+        var helpInfo = document.getElementById('helpInfo');
+        if (helpInfo.style.display === 'none') {
+            helpInfo.style.display = 'block';
+        } else {
+            helpInfo.style.display = 'none';
+        }
+    }
+
+
+    exerciseDropdown.addEventListener('change', function() {
+        selectedExercise = exerciseDropdown.value;
+        console.log('Selected exercise:', selectedExercise);
+    });
+    function myLoadFunction() {
+        console.log('Page has finished loading!');
+        let container = document.getElementById("video-container");
+        container.appendChild(videoElement1);  
+    }
+    function toggleButton() {
+    var button = document.getElementById("toggleButton");
+    
+    if (button.className === "toggle-button-off") {
+        button.className = "toggle-button-on";
+        button.innerHTML = "Keypoints On";
+        drawSkeleton = "yes";
+    } else {
+        button.className = "toggle-button-off";
+        button.innerHTML = "Keypoints Off";
+        drawSkeleton = "no";
+    }
+}
+
+    function toggleRecommendButton() {
+    var button = document.getElementById("RecommendButton");
+    
+    if (button.className === "toggle-button-off") {
+        button.className = "toggle-button-on";
+        button.innerHTML = "Recommendation On";
+        recommendButton = "yes";
+    } else {
+        button.className = "toggle-button-off";
+        button.innerHTML = "Recommendation Off";
+        recommendButton = "no";
+    }
+}
+    function processVideo() {
+        const file = fileInput.files[0];
+        //alert("Wecam not selected");
+
+        if (file) {
+            const formData = new FormData();
+            formData.append('video', file);
+
+            if (selectedExercise) {
+                formData.append('exercise', selectedExercise);
+            }
+            if (selectedExercise) {
+                formData.append('webcamstream', false);
+            }
+
+            formData.append("drawSkeleton", drawSkeleton);
+
+            formData.append("recommend", recommendButton);
+
+            processButton.disabled = true;
+            processingMessage.style.display = 'block';
+
+            
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();  // Return the JSON response
+                    } else {
+                        throw new Error('Processing failed');
+                    }
+                })
+                .then(data => {
+                    processedVideoSource = data.video_url; // Store the processed video source URL
+                    processedVideoPlayer.src = ''; // Clear the video source
+                    processedVideoPlayer.load(); // Reload the video source
+                    processedVideoContainer.style.display = 'block';  // Show the processed video container
+                    processingMessage.style.display = 'none';  // Hide the processing message
+                    refreshVideoPlayers();
+                })
+                .catch(error => {
+                    console.error(error);
+                    processButton.disabled = false;
+                    processingMessage.style.display = 'none';
+                });
+        }
+        else{
+
+           
+            const formData = new FormData();
+            formData.append('video', file);
+
+            /* ADDED CODE */
+            // Add the selected exercise type to the form data
+            if (selectedExercise) {
+                formData.append('exercise', selectedExercise);
+            }
+            if (selectedExercise) {
+                formData.append('webcamstream', true);
+            }
+
+            formData.append("drawSkeleton", drawSkeleton);
+            formData.append("recommend", recommendButton);
+
+            fetch('/upload', {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();  // Return the JSON response
+                    } else {
+                        throw new Error('Processing failed');
+                    }
+                })
+                .then(data => {
+                    processedVideoSource = data.video_url; // Store the processed video source URL
+                    refreshVideoPlayers();
+                })
+                .catch(error => {
+                    console.error(error);
+                    processButton.disabled = false;
+                    processingMessage.style.display = 'none';
+                });
+
+                console.log("processvideo() done!"); 
+        } 
+    }
+
+    function refreshVideoPlayers(){
+        let videoPlayer = document.getElementById('video-player');
+        console.log(webcamStream);
+
+        if(webcamStream){
+
+            videoPlayer.src = processedVideoSource; // Restore the initial video source
+            videoPlayer.load(); // Reload the video source
+            videoPlayer.play();
+            console.log("starting again");
+            processVideo();
+
+        }
+        else{
+            processedVideoPlayer.src = processedVideoSource;
+            videoPlayer.src = initialVideoSource; // Restore the initial video source
+            videoPlayer.load(); // Reload the video source
+            videoPlayer.play();
+            processedVideoPlayer.play();
+        }
+    } 
+        function toggleWebcam() {
+            
+            let toggleButton = document.getElementById('webcamToggle');
+
+            if (webcamStream) {
+                webcamStream = false;
+                toggleButton.innerHTML = 'Start Webcam';
+            } else {
+                webcamStream = true;
+                toggleButton.innerHTML = 'Stop Webcam';
+            }
+        }
+
+
+    </script>
+</body>
+</html>
