@@ -1,9 +1,13 @@
 Create Virtual environment and activate the Virtual environment.
 
-1. Create a virtual environment (Install this preferrably on Anaconda Prompt)
-   	'conda create -n yolov7_custom' 
-3. To activate the virtual environment
-	conda activate yolov7_custom
+1. Create a virtual environment (Install this preferrably on Anaconda Prompt).
+
+{conda create -n yolov7_custom}
+
+3. To activate the virtual environment:
+
+
+conda activate yolov7_custom
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Scripts -
