@@ -1,13 +1,12 @@
 Create Virtual environment and activate the Virtual environment.
 
-1. Create a virtual environment (Install this preferrably on Anaconda Prompt).
+1. Create a virtual environment (Install this preferrably on Anaconda Prompt.
 
-conda create -n yolov7_custom
+		conda create -n yolov7_custom
 
 3. To activate the virtual environment:
 
-
-conda activate yolov7_custom
+		conda activate yolov7_custom
 
 ---------------------------------------------------------------------------------------------------------------------------------------------
 Scripts -
@@ -18,22 +17,25 @@ Scripts -
 ----------------------------------------------------------------------------------------------------------------------------------------------
 ffmpeg -
 	This is used to convert the processed video to mp4 format.
-	Install the executable file from the official webiste and add it to the system'S environment variables.
-	To check if it is installed succesfuly run: 
+	Install the executable file from the official webiste and add it to the system's environment variables.
+	To check if it is installed succesfully: 
  
  	ffmpeg -version
+
+
 
 ----------------------------------------------------------------------------------------------------------------------------------------------
 How to run:
 
 We are using publicly available yolov7 model from github repo: https://github.com/WongKinYiu/yolov7.git
 1. Install the necessary dependencies
-	pip install -r requirements.txt
-	FFMPEG needs to be installed. 
+   
+			pip install -r requirements.txt
+   	FFMPEG needs to be installed. 
 	
-2. Click on [`yolov7-w6-pose.pt`](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt) to get the pre trained model weights pytorch file and place it the yolov7 directory.
+3. Click on [`yolov7-w6-pose.pt`](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt) to get the pre trained model weights pytorch file and place it the yolov7 directory.
 
-3. Run python app.py to run the website on local server.	
+4. Run python app.py to run the website on local server.	
 
 
 Note: If you wish to run this on GPU, then:
