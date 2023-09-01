@@ -1,0 +1,1 @@
+readme for static folder structure for git.

@@ -15,7 +15,10 @@ from PIL import ImageFont, ImageDraw, Image
 
 
 @torch.no_grad()
-def run_squats(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4', device='cpu', curltracker=True, drawskeleton=True, recommendation = False):
+def run_squats(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4', device='cpu', curltracker=True, drawskeleton=True, recommendation = False, parity=""):
+
+    out_video_name_delcommand = "del static\\uploads\\output_*"
+    subprocess.run(out_video_name_delcommand, shell = True)
 
     path = source
     if path.isnumeric():
@@ -45,8 +48,8 @@ def run_squats(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
         vid_write_image = letterbox(
             cap.read()[1], (fw), stride=64, auto=True)[0]
         resize_height, resize_width = vid_write_image.shape[:2]
-        out_video_name = "D:\\yolov7\\static\\uploads\\output_squat" if path.isnumeric(
-        ) else "D:\\yolov7\\static\\uploads\\output_squat"
+        out_video_name = "static\\uploads\\output_squat_" + parity if path.isnumeric(
+        ) else "static\\uploads\\output_squat_" + parity
         out = cv2.VideoWriter(f"{out_video_name}.mp4", cv2.VideoWriter_fourcc(
             *'mp4v'), 30, (resize_width, resize_height))
         if webcam:
@@ -65,7 +68,7 @@ def run_squats(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
         font1 = ImageFont.truetype(fontpath, 170)
         font2 = ImageFont.truetype(fontpath, 50)
 
-        print("check check", out_video_name)
+        
         while cap.isOpened:
 
             print(f"Frame {frame_count} Processing")
@@ -99,7 +102,7 @@ def run_squats(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
 
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-                print("before curltracker")
+                
                 
                 if curltracker:
                     for idx in range(output.shape[0]):
@@ -187,7 +190,7 @@ def run_squats(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
                 frame_count += 1
                 out.write(img)
 
-                if frame_count == 95:
+                if path.isnumeric() and frame_count == 10:
                     break
                 
             else:

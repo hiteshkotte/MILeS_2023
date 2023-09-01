@@ -15,14 +15,17 @@ from PIL import ImageFont, ImageDraw, Image
 
 
 @torch.no_grad()
-def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4', device='cpu', curltracker=True, drawskeleton=True, recommendation = False):
+def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4', device='cpu', curltracker=True, drawskeleton=True, recommendation = False, parity=""):
+
+    out_video_name_delcommand = "del static\\uploads\\output_*"
+    subprocess.run(out_video_name_delcommand, shell = True)
 
     path = source
     if path.isnumeric():
         ext = path     
     else:
         ext = path.split('/')[-1].split('.')[-1].strip().lower()
-    if ext in ["mp4", "webm", "avi"] or ext not in ["mp4", "webm", "avi"] and ext.isnumeric():
+    if ext in ["mp4", "webm", "avi"] or (ext not in ["mp4", "webm", "avi"] and ext.isnumeric()):
         input_path = int(path) if path.isnumeric() else path
         device = 'cuda' if torch.cuda.is_available() else 'cpu'
         if device != 'cuda':
@@ -45,8 +48,9 @@ def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4'
         vid_write_image = letterbox(
             cap.read()[1], (fw), stride=64, auto=True)[0]
         resize_height, resize_width = vid_write_image.shape[:2]
-        out_video_name = "D:\\yolov7\\static\\uploads\\output_bicep" if path.isnumeric(
-        ) else "D:\\yolov7\\static\\uploads\\output_bicep"
+        out_video_name = "static\\uploads\\output_bicep_" + parity if path.isnumeric(
+        ) else "static\\uploads\\output_bicep_" + parity
+        
         out = cv2.VideoWriter(f"{out_video_name}.mp4", cv2.VideoWriter_fourcc(
             *'mp4v'), 30, (resize_width, resize_height))
         if webcam:
@@ -65,9 +69,8 @@ def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4'
         font1 = ImageFont.truetype(fontpath, 170)
         font2 = ImageFont.truetype(fontpath, 50)
 
-        print("check check", out_video_name)
         while cap.isOpened:
-
+        
             print(f"Frame {frame_count} Processing")
             ret, frame = cap.read()
             if ret:
@@ -99,14 +102,16 @@ def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4'
 
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-                print("before curltracker")
+            
                 
                 if curltracker:
+                    
+
                     for idx in range(output.shape[0]):
                         kpts = output[idx, 7:].T
                         # Right arm =(5,7,9), left arm = (6,8,10)
                         # set draw=True to draw the arm keypoints.
-                        angle = findAngle(img, kpts, 5, 7, 9, draw=drawskeleton)
+                        angle = findAngle(img, kpts, 5, 7, 9, draw=False)
                         percentage = np.interp(angle, (20, 150), (100, 0))
                         bar = np.interp(angle, (20, 150), (200, fh-100)) # hypers: bar = np.interp(angle, (20, 150), (200, fh-100))
 
@@ -150,8 +155,13 @@ def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4'
 
                         im = Image.fromarray(img)
                         draw = ImageDraw.Draw(im)
-                        draw.rounded_rectangle((fw-280, (fh//2)-230, fw-80, (fh//2)-30), fill=color,
-                                               radius=40)
+                        draw.rounded_rectangle((fw-280, (fh//2)-230, fw-40, (fh//2)-30), fill=color,
+                                               radius=50)
+                        #draw.rounded_rectangle((fw-1000, (fh//2)-475, fw-1700, (fh//2)-425), fill=(255, 87, 34), radius=20)
+                        draw.rounded_rectangle((fw-300, (fh//2)+210, fw-100, (fh//2)+410), fill=color,
+                                               radius=50)
+                        
+
 
                         draw.text(
                             (145, int(bar)-17), f"{int(percentage)}%", font=font, fill=(255, 255, 255))
@@ -161,8 +171,10 @@ def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4'
                             (fw-300, (fh//2)+200), f"{int(10-bcount)}", font=font1, fill=(255, 0, 0))
                         draw.text(
                             (fw-280, (fh//2)+400), f"More to Go!", font=font, fill=(0, 0, 255))
+                        #draw.text(
+                            #(fw-1800, (fh//2)-450), feedback, font=font2, fill=(0, 0, 0))
                         draw.text(
-                            (fw-1800, (fh//2)-450), feedback, font=font2, fill=(0, 0, 0))
+                            (fw-1800, (fh//2)-450), feedback, font=font2, fill=(255, 255, 255))  # Text on top of the rectangle
                         img = np.array(im)
 
                 if drawskeleton:
@@ -187,8 +199,12 @@ def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4'
                 frame_count += 1
                 out.write(img)
 
-                if frame_count == 1000:
+                if path.isnumeric() and frame_count == 1:
                     break
+                
+                
+
+                
                 
             else:
                 break

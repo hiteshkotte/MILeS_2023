@@ -15,8 +15,10 @@ from PIL import ImageFont, ImageDraw, Image
 
 
 @torch.no_grad()
-def run_lunges(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4', device='cpu', curltracker=True, drawskeleton=True, recommendation = False):
+def run_lunges(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4', device='cpu', curltracker=True, drawskeleton=True, recommendation = False, parity=""):
 
+    out_video_name_delcommand = "del static\\uploads\\output_*"
+    subprocess.run(out_video_name_delcommand, shell = True)
     path = source
     if path.isnumeric():
         ext = path     
@@ -42,8 +44,8 @@ def run_lunges(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
         vid_write_image = letterbox(
             cap.read()[1], (fw), stride=64, auto=True)[0]
         resize_height, resize_width = vid_write_image.shape[:2]
-        out_video_name = "D:\\yolov7\\static\\uploads\\output_lunges" if path.isnumeric(
-        ) else "D:\\yolov7\\static\\uploads\\output_lunges"
+        out_video_name = "static\\uploads\\output_lunges_" + parity if path.isnumeric(
+        ) else "static\\uploads\\output_lunges_" + parity
         out = cv2.VideoWriter(f"{out_video_name}.mp4", cv2.VideoWriter_fourcc(
             *'mp4v'), 30, (resize_width, resize_height))
         if webcam:
@@ -62,7 +64,7 @@ def run_lunges(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
         font1 = ImageFont.truetype(fontpath, 170)
         font2 = ImageFont.truetype(fontpath, 50)
 
-        print("check check", out_video_name)
+        
         while cap.isOpened:
 
             print(f"Frame {frame_count} Processing")
@@ -96,7 +98,7 @@ def run_lunges(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
 
                 img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
 
-                print("before curltracker")
+                
                 
                 if curltracker:
                     for idx in range(output.shape[0]):
@@ -184,7 +186,7 @@ def run_lunges(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
                 frame_count += 1
                 out.write(img)
 
-                if frame_count == 95:
+                if path.isnumeric() and frame_count == 10:
                     break
                 
             else:

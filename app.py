@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, jsonify, send_file
 import os
+import time
 from werkzeug.utils import secure_filename
 import threading
-import time
 import torch
 from torchvision import transforms
 import cv2
@@ -77,40 +77,42 @@ def draw_keypoints(output, image):
 
 def process_video(video_file, exercise, webcam, draw_skeleton, recommendation):
     global processing_complete
+    global parity
+    parity = str(int(time.time() * 1000))
     # Define the output path for the processed video
     if video_file is not None:
         fname, fext = os.path.splitext(os.path.basename(video_file))
     else:
         fname, fext = f"{exercise}", ".mp4"
-    output_filename = f"output_{fname}_conv{fext}"
+    output_filename = f"output_{fname}_{parity}_conv{fext}"
     output_path = os.path.join(app.config['UPLOAD_FOLDER'], output_filename)
     print("def pose estimation", video_file)
     
     if exercise == 'bicep':
         if webcam == 'true':
-            run_bicep(source='0', drawskeleton=draw_skeleton, recommendation = recommendation)
+            run_bicep(source='0', drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity)
         else:
-            run_bicep(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation) 
+            run_bicep(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity) 
     elif exercise == 'lunges':
         if webcam == 'true':
-            run_lunges(source='0', drawskeleton=draw_skeleton, recommendation = recommendation)
+            run_lunges(source='0', drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity)
         else:
-            run_lunges(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation)
+            run_lunges(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity)
     elif exercise == 'pushup':
         if webcam == 'true':
-            run_pushup(source='0', drawskeleton=draw_skeleton, recommendation = recommendation)
+            run_pushup(source='0', drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity)
         else:
-            run_pushup(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation)
+            run_pushup(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity)
     elif exercise == 'shoulder_lateral_raise':
         if webcam == 'true':
-            run_shoulder_lateral_raise(source='0', drawskeleton=draw_skeleton, recommendation = recommendation)
+            run_shoulder_lateral_raise(source='0', drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity)
         else:
-            run_shoulder_lateral_raise(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation)
+            run_shoulder_lateral_raise(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity)
     elif exercise == 'squats':
         if webcam == 'true':
-            run_squats(source='0', drawskeleton=draw_skeleton, recommendation = recommendation)
+            run_squats(source='0', drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity)
         else:
-            run_squats(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation)
+            run_squats(source= video_file, drawskeleton=draw_skeleton, recommendation = recommendation, parity=parity)
         
     
     processing_complete = True
@@ -124,6 +126,7 @@ def run_flask_server():
 
 # Set the initial value of the processing_complete flag
 processing_complete = False
+parity = ""
 
 @app.route('/')
 def home():
