@@ -12,6 +12,7 @@ from utils.general import non_max_suppression_kpt, strip_optimizer
 from torchvision import transforms
 from trainer import findAngle
 from PIL import ImageFont, ImageDraw, Image
+from plot_performance import plotgraph
 
 
 @torch.no_grad()
@@ -60,6 +61,10 @@ def run_pushup(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
         direction = 0
         max_percentage = 0
         feedback = ""
+        angles = []
+        percentages = []
+        bars = []
+
 
         fontpath = "./sfpro.ttf"
         font = ImageFont.truetype(fontpath, 32)
@@ -112,6 +117,9 @@ def run_pushup(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
                         percentage = np.interp(angle, (210, 280), (0, 100))
                         bar = np.interp(angle, (220, 280), (fh-100, 100)) # hypers: bar = np.interp(angle, (20, 150), (200, fh-100))
 
+                        angles.append(angle)
+                        percentages.append(percentage)
+                        bars.append(bar)
                         color = (254, 118, 136)
                         
                         max_percentage = max(percentage, max_percentage)
@@ -134,38 +142,91 @@ def run_pushup(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
 
                                 max_percentage = 0
 
-                        # draw Bar and counter
-                        cv2.line(img, (100, 200), (100, fh-100),
-                                 (255, 255, 255), 30)
-                        cv2.line(img, (100, int(bar)),
-                                 (100, fh-100), color, 30)
+                        if webcam:
+                            # draw Bar and counter
+                            cv2.line(img, (100, 200), (100, fh-100),
+                                    (255, 255, 255), 30)
+                            cv2.line(img, (100, int(bar)),
+                                    (100, fh-100), color, 30)
 
-                        if (int(percentage) < 10):
-                            cv2.line(img, (155, int(bar)),
-                                     (190, int(bar)), (254, 118, 136), 40)
-                        elif (int(percentage) >= 10 and (int(percentage) < 100)):
-                            cv2.line(img, (155, int(bar)),
-                                     (200, int(bar)), (254, 118, 136), 40)
+                            if (int(percentage) < 10):
+                                cv2.line(img, (155, int(bar)),
+                                        (190, int(bar)), (254, 118, 136), 40)
+                            elif (int(percentage) >= 10 and (int(percentage) < 100)):
+                                cv2.line(img, (155, int(bar)),
+                                        (200, int(bar)), (254, 118, 136), 40)
+                            else:
+                                cv2.line(img, (155, int(bar)),
+                                        (210, int(bar)), (254, 118, 136), 40)
+
+
+
+                            im = Image.fromarray(img)
+                            draw = ImageDraw.Draw(im)
+                            draw.rounded_rectangle((fw-240, (fh//2)-230, fw-150, (fh//2)-140), fill=color,
+                                                radius=20)
+                            #draw.rounded_rectangle((fw-1000, (fh//2)-475, fw-1700, (fh//2)-425), fill=(255, 87, 34), radius=20)
+                            draw.rounded_rectangle((fw-240, (fh//2)+145, fw-140, (fh//2)+235), fill=color,
+                                                radius=20)
+                            
+
+
+                            draw.text(
+                                (145, int(bar)-17), f"{int(percentage)}%", font=font, fill=(255, 255, 255))
+                            draw.text(
+                                (fw-228, (fh//2)-229), f"{int(bcount)}", font=font3, fill=(255, 255, 255))
+                            draw.text(
+                                (fw-228, (fh//2)+150), f"{int(10-bcount)}", font=font3, fill=(255, 0, 0))
+                            draw.text(
+                                (fw-250, (fh//2)+250), f"More to Go!", font=font4, fill=(0, 0, 255))
+                            #draw.text(
+                                #(fw-1800, (fh//2)-450), feedback, font=font2, fill=(0, 0, 0))
+                            draw.text(
+                                (150, (fh//2)-249), feedback, font=font4, fill=(150, 255, 100))  # Text on top of the rectangle
+                            img = np.array(im)
+
                         else:
-                            cv2.line(img, (155, int(bar)),
-                                     (210, int(bar)), (254, 118, 136), 40)
+                            # draw Bar and counter
+                            cv2.line(img, (100, 200), (100, fh-100),
+                                    (255, 255, 255), 30)
+                            cv2.line(img, (100, int(bar)),
+                                    (100, fh-100), color, 30)
 
-                        im = Image.fromarray(img)
-                        draw = ImageDraw.Draw(im)
-                        draw.rounded_rectangle((fw-280, (fh//2)-230, fw-80, (fh//2)-30), fill=color,
-                                               radius=40)
+                            if (int(percentage) < 10):
+                                cv2.line(img, (155, int(bar)),
+                                        (190, int(bar)), (254, 118, 136), 40)
+                            elif (int(percentage) >= 10 and (int(percentage) < 100)):
+                                cv2.line(img, (155, int(bar)),
+                                        (200, int(bar)), (254, 118, 136), 40)
+                            else:
+                                cv2.line(img, (155, int(bar)),
+                                        (210, int(bar)), (254, 118, 136), 40)
 
-                        draw.text(
-                            (145, int(bar)-17), f"{int(percentage)}%", font=font, fill=(255, 255, 255))
-                        draw.text(
-                            (fw-228, (fh//2)-229), f"{int(bcount)}", font=font1, fill=(255, 255, 255))
-                        draw.text(
-                            (fw-300, (fh//2)+200), f"{int(10-bcount)}", font=font1, fill=(255, 0, 0))
-                        draw.text(
-                            (fw-280, (fh//2)+400), f"More to Go!", font=font, fill=(0, 0, 255))
-                        draw.text(
-                            (fw-1800, (fh//2)-450), feedback, font=font2, fill=(0, 0, 0))
-                        img = np.array(im)
+
+
+                            im = Image.fromarray(img)
+                            draw = ImageDraw.Draw(im)
+                            draw.rounded_rectangle((fw-280, (fh//2)-230, fw-40, (fh//2)-30), fill=color,
+                                                radius=50)
+                            #draw.rounded_rectangle((fw-1000, (fh//2)-475, fw-1700, (fh//2)-425), fill=(255, 87, 34), radius=20)
+                            draw.rounded_rectangle((fw-300, (fh//2)+210, fw-100, (fh//2)+410), fill=color,
+                                                radius=50)
+                            
+
+
+                            draw.text(
+                                (145, int(bar)-17), f"{int(percentage)}%", font=font, fill=(255, 255, 255))
+                            draw.text(
+                                (fw-228, (fh//2)-229), f"{int(bcount)}", font=font1, fill=(255, 255, 255))
+                            draw.text(
+                                (fw-300, (fh//2)+200), f"{int(10-bcount)}", font=font1, fill=(255, 0, 0))
+                            draw.text(
+                                (fw-280, (fh//2)+400), f"More to Go!", font=font, fill=(0, 0, 255))
+                            #draw.text(
+                                #(fw-1800, (fh//2)-450), feedback, font=font2, fill=(0, 0, 0))
+                            draw.text(
+                                (fw-1800, (fh//2)-450), feedback, font=font3, fill=(255, 255, 255))  # Text on top of the rectangle
+                            img = np.array(im)
 
                 if drawskeleton:
                     for idx in range(output.shape[0]):
@@ -189,12 +250,13 @@ def run_pushup(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
                 frame_count += 1
                 out.write(img)
 
-                if path.isnumeric() and frame_count == 10:
+                if path.isnumeric() and frame_count == 500:
                     break
                 
             else:
                 break
         
+        plotgraph(angles, percentages, bars)
         cap.release()
         out.release()
         #cv2.destroyAllWindows()
