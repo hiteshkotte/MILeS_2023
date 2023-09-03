@@ -224,7 +224,7 @@ def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4'
                             draw.text(
                                 (fw-228, (fh//2)-229), f"{int(bcount)}", font=font1, fill=(255, 255, 255))
                             draw.text(
-                                (fw-300, (fh//2)+200), f"{int(10-bcount)}", font=font1, fill=(255, 0, 0))
+                                (fw-300, (fh//2)+200), f"{int(20-bcount)}", font=font1, fill=(255, 0, 0))
                             draw.text(
                                 (fw-280, (fh//2)+400), f"More to Go!", font=font, fill=(0, 0, 255))
                             #draw.text(
