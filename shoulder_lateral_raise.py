@@ -177,7 +177,7 @@ def run_shoulder_lateral_raise(poseweights='yolov7-w6-pose.pt', source='static/u
                             draw.text(
                                 (fw-228, (fh//2)-229), f"{int(bcount)}", font=font3, fill=(255, 255, 255))
                             draw.text(
-                                (fw-228, (fh//2)+150), f"{int(20-bcount)}", font=font3, fill=(255, 0, 0))
+                                (fw-228, (fh//2)+150), f"{int(10-bcount)}", font=font3, fill=(255, 0, 0))
                             draw.text(
                                 (fw-250, (fh//2)+250), f"More to Go!", font=font4, fill=(0, 0, 255))
                             #draw.text(
