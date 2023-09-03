@@ -22,7 +22,7 @@ Scripts :
 
 app.py - Python flask application that needs to run on a web server to handle the website communication with the YOLO model.
 
-index.html - Html file to manage the website webpage and handle UI.
+index.html - Html file to manage the website webpage and handle UI. (This can be found inside the "Templates" folder)
 
 The other scripts for each exercises is named with their following exercise names.
 
