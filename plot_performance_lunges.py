@@ -18,7 +18,7 @@ def plotgraph(angle, percentage, bar):
     #angle = pd.read_csv("angles.csv")
     #percentage = pd.read_csv("percentages.csv")
     #bar = pd.read_csv("bars.csv")
-    save_file = "static\\uploads\\bicep_plot.png"
+    save_file = "static\\uploads\\lunges_plot.png"
 
     # apply a moving average filter with window size 3 to the 'percentages' column
     #percentages_smoothed = percentage['Percentage'].rolling(window=3, center=True).mean()

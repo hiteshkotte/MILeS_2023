@@ -12,7 +12,7 @@ from utils.general import non_max_suppression_kpt, strip_optimizer
 from torchvision import transforms
 from trainer import findAngle
 from PIL import ImageFont, ImageDraw, Image
-from plot_performance import plotgraph
+from plot_performance_shoulder import plotgraph
 
 @torch.no_grad()
 def run_shoulder_lateral_raise(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4', device='cpu', curltracker=True, drawskeleton=True, recommendation = False, parity=""):
