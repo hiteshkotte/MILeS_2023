@@ -37,3 +37,9 @@ thop  # FLOPs computation
 # albumentations>=1.0.3
 # pycocotools>=2.0  # COCO mAP
 # roboflow
+
+# Web Framework ------------------------------
+Flask>=1.1.2
+
+# Multimedia ---------------------------------
+imageio-ffmpeg>=0.4.3
