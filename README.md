@@ -8,7 +8,8 @@ https://github.com/hiteshkotte/MILeS_2023/assets/35593884/7835485c-a494-40b1-826
 
 Create Virtual environment and activate the Virtual environment.
 
-1. Create a virtual environment (Install this preferrably on Anaconda Prompt.
+1. Create a virtual environment (Install this preferrably on Anaconda Prompt. 
+This will create a empty virtual environment.
 
 		conda create -n yolov7_custom
 
@@ -29,8 +30,7 @@ The other scripts for each exercises is named with their following exercise name
 ffmpeg :
 
 This is used to convert the processed video to mp4 format.
-
- Install the executable file from the official webiste and add it to the system's environment variables.
+This is already installed from the requirements.txt.
 
  To check if it is installed succesfully: 
  
@@ -46,8 +46,6 @@ We are using publicly available yolov7 model from github repo: https://github.co
 1. Install the necessary dependencies
    
 		pip install -r requirements.txt
-
-   	FFMPEG needs to be installed. 
 	
 3. Click on [`yolov7-w6-pose.pt`](https://github.com/WongKinYiu/yolov7/releases/download/v0.1/yolov7-w6-pose.pt) to get the pre trained model weights pytorch file and place it the yolov7 directory.
 
