@@ -59,6 +59,9 @@ Note: If you wish to run this on GPU, then:
 You need to install CUDA that is compatible with the GPU available on your machine. Refer official CUDA installation and add them to the enviromnment variables for GPU acceleration.
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
+For Input videos of exercises, Please download from the below google drive link.
+
+		https://drive.google.com/drive/folders/10dz-wZCnio7Sub48rYiIDp3Gb_mW_Fq-?usp=sharing
 
 
 
