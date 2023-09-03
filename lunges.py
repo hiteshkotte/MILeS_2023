@@ -25,8 +25,11 @@ def run_lunges(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
         ext = path     
     else:
         ext = path.split('/')[-1].split('.')[-1].strip().lower()
-    if ext in ["mp4", "webm", "avi"] or ext not in ["mp4", "webm", "avi"] and ext.isnumeric():
+    if ext in ["mp4", "webm", "avi"] or (ext not in ["mp4", "webm", "avi"] and ext.isnumeric()):
         input_path = int(path) if path.isnumeric() else path
+        device = 'cuda' if torch.cuda.is_available() else 'cpu'
+        if device != 'cuda':
+            print("GPU not available so running on CPU")
         device = select_device(device)
         half = device.type != 'cpu'
         model = attempt_load(poseweights, map_location=device)
