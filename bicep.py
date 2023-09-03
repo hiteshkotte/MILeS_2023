@@ -255,7 +255,7 @@ def run_bicep(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4'
                 frame_count += 1
                 out.write(img)
 
-                if path.isnumeric() and frame_count == 10:
+                if path.isnumeric() and frame_count == 500:
                     break
                 
             else:

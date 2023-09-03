@@ -68,6 +68,8 @@ def run_lunges(poseweights='yolov7-w6-pose.pt', source='static/uploads/bicep.mp4
 
         font1 = ImageFont.truetype(fontpath, 170)
         font2 = ImageFont.truetype(fontpath, 50)
+        font3 = ImageFont.truetype(fontpath, 70)
+        font4 = ImageFont.truetype(fontpath, 30)
 
         
         while cap.isOpened:
