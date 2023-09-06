@@ -60,7 +60,7 @@ You need to install CUDA that is compatible with the GPU available on your machi
 -----------------------------------------------------------------------------------------------------------------------------------------------
 For Input videos of exercises, Please download from the below google drive link.
 
-	[https://drive.google.com/drive/folders/10dz-wZCnio7Sub48rYiIDp3Gb_mW_Fq-?usp=sharing](https://drive.google.com/drive/folders/1PnnHZvk3qELKNNPpTyvwGxYBd8VnvnUG?usp=share_link)https://drive.google.com/drive/folders/1PnnHZvk3qELKNNPpTyvwGxYBd8VnvnUG?usp=share_link
+	https://drive.google.com/drive/folders/1PnnHZvk3qELKNNPpTyvwGxYBd8VnvnUG
 
 
 
