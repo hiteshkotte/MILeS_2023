@@ -5,6 +5,10 @@ Hitesh Kotte, Milos Kravcik and Nghia Duong-Trung
 
 
 
+Uploading Bicep1.mp4…
+
+
+
 Create Virtual environment and activate the Virtual environment.
 
 1. Create a virtual environment (Install this preferrably on Anaconda Prompt. 
