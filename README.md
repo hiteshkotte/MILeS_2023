@@ -2,7 +2,7 @@ Real-Time Posture Correction in Gym Exercises: A Computer Vision-Based Approach 
 
 Hitesh Kotte, Milos Kravcik and Nghia Duong-Trung
 
-https://github.com/hiteshkotte/MILeS_2023/assets/35593884/7835485c-a494-40b1-826d-0bdde969e541
+
 
 
 Create Virtual environment and activate the Virtual environment.
